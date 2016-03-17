@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">Ble Peripheral sample</string>
-    <string name="start_advertising">Start advertising</string>
-    <string name="start_scan">Start scan</string>
+    <string name="app_name">BLE Demo</string>
+    <string name="start_advertising">advertise</string>
+    <string name="start_scan">scan</string>
     <string name="send">Send</string>
+    <string name="hint_email">Email</string>
 </resources>

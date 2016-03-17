@@ -3,70 +3,130 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              android:paddingBottom="@dimen/activity_vertical_margin"
-              android:paddingLeft="@dimen/activity_horizontal_margin"
-              android:paddingRight="@dimen/activity_horizontal_margin"
-              android:paddingTop="@dimen/activity_vertical_margin"
               tools:context=".MainActivity">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_gravity="center_horizontal"
+        android:background="#3f51b5">
 
-        <Button
-            android:id="@+id/button_advertise"
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/start_advertising"/>
+            android:text="Bluetooth Low Energy marketed as Bluetooth Smart™ is a wireless personal area network. This is a demo app to communicate over BLE with other devices."
+            android:id="@+id/textView"
+            android:layout_gravity="center_horizontal"
+            android:textSize="16dp"
+            android:textColor="#ffffff"
+            android:textIsSelectable="false"
+            android:padding="20dp" />
 
-        <Button
-            android:id="@+id/button_scan"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:text="@string/start_scan"/>
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <Button
+                android:id="@+id/button_advertise"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/start_advertising"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:theme="@style/MyButton"
+                android:textColor="#ffffff" />
+
+            <Button
+                android:id="@+id/button_scan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/start_scan"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:theme="@style/MyButton"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:padding="20dp">
 
-        <EditText
-            android:id="@+id/edit_text_msg"
-            android:layout_width="0dp"
+        <TextView
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1.38"/>
+            android:text="You may send messages to the peripheral device as well."
+            android:id="@+id/textView2"
+            android:layout_gravity="center_horizontal" />
 
-        <Button
-            android:id="@+id/button_send"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_weight="0.83"
-            android:text="@string/send"/>
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="10dp">
+
+            <EditText
+                android:id="@+id/edit_text_msg"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.6" />
+
+            <Button
+                android:id="@+id/button_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:theme="@style/MyButton"
+                android:text="@string/send" />
+        </LinearLayout>
 
     </LinearLayout>
 
-    <Button
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="HI"
-        android:id="@+id/responseIndicator_1" />
+        android:layout_gravity="center_horizontal"
+        android:padding="20dp">
 
-    <Button
-        android:layout_width="match_parent"
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HELLO"
+            android:id="@+id/responseIndicator_2"
+            android:layout_weight="0.5" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HI"
+            android:id="@+id/responseIndicator_1"
+            android:layout_weight="0.5" />
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/SCROLLER_ID"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="HELLO"
-        android:id="@+id/responseIndicator_2" />
+        android:scrollbars="vertical"
+        android:fillViewport="true"
+        android:padding="20dp">
 
-    <TextView
-        android:id="@+id/text_view_log"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:textSize="16sp"/>
+        <TextView
+            android:id="@+id/text_view_log"
+            android:fontFamily="monospace"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:textSize="16sp"/>
 
+    </ScrollView>
 
 </LinearLayout>

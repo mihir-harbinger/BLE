@@ -1,8 +1,11 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
+        <item name="android:statusBarColor">#1A237E</item>
     </style>
-
+    <style name="MyButton" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorControlHighlight">#81D4FA</item>
+    </style>
 </resources>
