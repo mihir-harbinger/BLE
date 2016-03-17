@@ -114,11 +114,11 @@ public class MainActivity extends Activity implements OnClickListener, ILogger {
                 switch(str){
                     case "HI"       :   responseIndicator_1.setBackgroundColor(Color.parseColor("#3b5988"));
                                         responseIndicator_1.setTextColor(Color.parseColor("#ffffff"));
-                                        responseIndicator_1.setText("HI Tapped");
+                                        responseIndicator_1.setText("HI Tapped!");
                                         break;
                     case "HELLO"    :   responseIndicator_2.setBackgroundColor(Color.parseColor("#883b59"));
                                         responseIndicator_2.setTextColor(Color.parseColor("#ffffff"));
-                                        responseIndicator_2.setText("HELLO Tapped");
+                                        responseIndicator_2.setText("HELLO Tapped!");
                                         break;
                 }
             }
