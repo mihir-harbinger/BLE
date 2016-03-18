@@ -21,9 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Created by ngencic on 13.9.15..
- */
 public class BleScanner {
 
     static final long SCAN_TIMEOUT = 5000l;
@@ -35,11 +32,13 @@ public class BleScanner {
     private Context mContext;
     private BluetoothGatt mGatt;
     private BluetoothGattCharacteristic mCharacteristic;
+    private MainActivity mActivity;
 
     public BleScanner(Context context, BluetoothManager bluetoothManager) {
         mDiscoveredDevices = new HashMap<>();
         mBluetoothManager = bluetoothManager;
         mContext = context;
+        mActivity = (MainActivity)context;
     }
 
     public void setLogger(ILogger logger){
@@ -117,6 +116,7 @@ public class BleScanner {
                 super.onCharacteristicChanged(gatt, characteristic);
                 if (mLogger != null) {
                     mLogger.log("Characteristic changed value: " + characteristic.getStringValue(0));
+                    mActivity.serveIncomingRequest(characteristic.getStringValue(0));
                 }
             }
         });

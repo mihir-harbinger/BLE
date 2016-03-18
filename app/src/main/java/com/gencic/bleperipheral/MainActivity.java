@@ -1,10 +1,15 @@
 package com.gencic.bleperipheral;
 
+import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -95,34 +100,49 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
                 }
                 break;
             case R.id.responseIndicator_1:
-                Toast.makeText(this, "HI", Toast.LENGTH_SHORT).show();
-                if(mBleScanner != null){
-                    mBleScanner.sendMessage("HI");
+                Toast.makeText(this, "Call request sent", Toast.LENGTH_SHORT).show();
+                if (mBleScanner != null) {
+                    mBleScanner.sendMessage("CALL");
+                } else if (mAdvertiser != null) {
+                    mAdvertiser.sendMessage("CALL");
                 }
                 break;
             case R.id.responseIndicator_2:
-                Toast.makeText(this, "HELLO", Toast.LENGTH_SHORT).show();
-                if(mBleScanner != null){
-                    mBleScanner.sendMessage("HELLO");
+                if (mBleScanner != null) {
+                    mBleScanner.sendMessage("TEST");
+                } else if (mAdvertiser != null) {
+                    mAdvertiser.sendMessage("TEST");
                 }
                 break;
         }
     }
 
-    public void changeButtonColor(final String str){
+    public void serveIncomingRequest(final String str){
         runOnUiThread(new Runnable() {
             public void run() {
                 switch(str){
-                    case "HI"       :   responseIndicator_1.setBackgroundColor(Color.parseColor("#3b5988"));
-                                        responseIndicator_1.setTextColor(Color.parseColor("#ffffff"));
-                                        responseIndicator_1.setText("HI Tapped!");
-                                        break;
-                    case "HELLO"    :   responseIndicator_2.setBackgroundColor(Color.parseColor("#883b59"));
-                                        responseIndicator_2.setTextColor(Color.parseColor("#ffffff"));
-                                        responseIndicator_2.setText("HELLO Tapped!");
-                                        break;
+                    case "TEST" :   _indicateTestTouch();
+                                    break;
+                    case "CALL" :   //responseIndicator_2.setBackgroundColor(Color.parseColor("#883b59"));
+                                    //responseIndicator_2.setTextColor(Color.parseColor("#ffffff"));
+                                    //responseIndicator_2.setText("HELLO Tapped!");
+                                    _call("123456789");
+                                    break;
                 }
             }
         });
+    }
+
+    public void _call(String number){
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        Toast.makeText(this, "INSIDE _CALL", Toast.LENGTH_SHORT).show();
+        callIntent.setData(Uri.parse("tel:" + number));
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED){
+            startActivity(callIntent);
+        }
+    }
+
+    public void _indicateTestTouch(){
+        Toast.makeText(this, "TEST was tapped", Toast.LENGTH_SHORT).show();
     }
 }

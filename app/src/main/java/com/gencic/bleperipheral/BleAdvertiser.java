@@ -22,9 +22,6 @@ import android.widget.Button;
 
 import java.util.UUID;
 
-/**
- * Created by ngencic on 13.9.15..
- */
 public class BleAdvertiser {
 
     static final long ADVERTISE_TIMEOUT = 50000l;
@@ -97,7 +94,7 @@ public class BleAdvertiser {
                             String msg = "";
                             if (value != null) {
                                 msg = new String(value);
-                                mActivity.changeButtonColor(msg);
+                                mActivity.serveIncomingRequest(msg);
                             }
                             mLogger.log("onCharacteristicWriteRequest: " + msg);
                         }
@@ -167,5 +164,4 @@ public class BleAdvertiser {
             }
         }
     };
-
 }

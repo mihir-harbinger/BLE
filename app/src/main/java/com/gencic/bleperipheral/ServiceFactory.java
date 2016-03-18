@@ -7,9 +7,6 @@ import java.util.UUID;
 
 import static android.bluetooth.BluetoothGattService.SERVICE_TYPE_PRIMARY;
 
-/**
- * Created by ngencic on 9/15/15.
- */
 public class ServiceFactory {
 
     public static BluetoothGattService generateService() {

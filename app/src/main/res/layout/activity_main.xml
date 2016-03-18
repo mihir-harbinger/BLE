@@ -59,12 +59,14 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="You may send messages to the peripheral device as well."
+            android:text="You may send messages to the connected device as well."
             android:id="@+id/textView2"
             android:layout_gravity="center_horizontal" />
 
         <LinearLayout
             android:orientation="horizontal"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -72,8 +74,8 @@
 
             <EditText
                 android:id="@+id/edit_text_msg"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
+                android:nextFocusUp="@id/edit_text_msg"
+                android:nextFocusLeft="@id/edit_text_msg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6" />
@@ -99,16 +101,21 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="HELLO"
-            android:id="@+id/responseIndicator_2"
+            android:text="CALL "
+            android:id="@+id/responseIndicator_1"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:theme="@style/MyButton"
             android:layout_weight="0.5" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="HI"
-            android:id="@+id/responseIndicator_1"
+            android:text="TEST BUTTON"
+            android:id="@+id/responseIndicator_2"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:theme="@style/MyButton"
             android:layout_weight="0.5" />
+
     </LinearLayout>
 
     <ScrollView
@@ -125,7 +132,11 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:text="LOG DUMP"
+            android:background="#eaeaea"
+            android:textColor="#585858"
+            android:padding="10dp" />
 
     </ScrollView>
 
