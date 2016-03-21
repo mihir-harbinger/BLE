@@ -88,6 +88,7 @@ public class BleScanner {
                             mCharacteristic = service.getCharacteristics().get(j);
                             if (mLogger != null) {
                                 mLogger.log("Characteristic discovered: " + mCharacteristic.getUuid());
+                                mActivity.setConnectionStatus("Connected", true);
                             }
                             gatt.setCharacteristicNotification(mCharacteristic, true);
                         }
@@ -107,6 +108,7 @@ public class BleScanner {
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                     if (mLogger != null) {
                         mLogger.log("Disconnected from Gatt Server");
+                        mActivity.setConnectionStatus("Disconnected", false);
                     }
                 }
             }
@@ -116,6 +118,7 @@ public class BleScanner {
                 super.onCharacteristicChanged(gatt, characteristic);
                 if (mLogger != null) {
                     mLogger.log("Characteristic changed value: " + characteristic.getStringValue(0));
+                    mActivity.setMessageText(characteristic.getStringValue(0));
                     mActivity.serveIncomingRequest(characteristic.getStringValue(0));
                 }
             }

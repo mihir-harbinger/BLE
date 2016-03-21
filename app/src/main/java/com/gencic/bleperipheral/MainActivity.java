@@ -2,9 +2,12 @@ package com.gencic.bleperipheral;
 
 import android.Manifest;
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
@@ -18,6 +21,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Random;
+
 public class MainActivity extends AppCompatActivity implements OnClickListener, ILogger {
 
     private TextView mTextViewLog;
@@ -27,6 +32,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
     private BleScanner mBleScanner;
     private Button responseIndicator_1;
     private Button responseIndicator_2;
+    private TextView mDeviceStatus;
+    private TextView mConnectionStatus;
+    private TextView mMessageLog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +42,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
         setContentView(R.layout.activity_main);
         mTextViewLog = (TextView) findViewById(R.id.text_view_log);
         mEditTextMsg = (EditText) findViewById(R.id.edit_text_msg);
+        mDeviceStatus = (TextView) findViewById(R.id.device_status);
+        mConnectionStatus = (TextView) findViewById(R.id.conn_status);
+        mMessageLog = (TextView) findViewById(R.id.message_log);
         findViewById(R.id.button_advertise).setOnClickListener(this);
         findViewById(R.id.button_scan).setOnClickListener(this);
         findViewById(R.id.button_send).setOnClickListener(this);
@@ -42,6 +53,35 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
         findViewById(R.id.responseIndicator_1).setOnClickListener(this);
         responseIndicator_2 = (Button) findViewById(R.id.responseIndicator_2);
         findViewById(R.id.responseIndicator_2).setOnClickListener(this);
+
+        IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        registerReceiver(mReceiver, filter);
+
+        BluetoothAdapter mBluetoothAdapter
+                = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter == null) {
+            mDeviceStatus.setText("Your device does not support Bluetooth.");
+            // Device does not support Bluetooth
+        } else {
+            if (mBluetoothAdapter.isEnabled()) {
+                mDeviceStatus.setTextColor(Color.parseColor("#009d00"));
+                mDeviceStatus.setText("Device ready");
+                // Bluetooth is not enable :)
+            }
+            else{
+                mDeviceStatus.setTextColor(Color.parseColor("#ff9999"));
+                mDeviceStatus.setText("Bluetooth disabled");
+            }
+        }
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+    /* ... */
+
+        // Unregister broadcast listeners
+        unregisterReceiver(mReceiver);
     }
 
     @Override
@@ -100,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
                 }
                 break;
             case R.id.responseIndicator_1:
-                Toast.makeText(this, "Call request sent", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Call request sent", Toast.LENGTH_SHORT).show();
                 if (mBleScanner != null) {
                     mBleScanner.sendMessage("CALL");
                 } else if (mAdvertiser != null) {
@@ -126,23 +166,88 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
                     case "CALL" :   //responseIndicator_2.setBackgroundColor(Color.parseColor("#883b59"));
                                     //responseIndicator_2.setTextColor(Color.parseColor("#ffffff"));
                                     //responseIndicator_2.setText("HELLO Tapped!");
-                                    _call("123456789");
+                                    Random rnd = new Random();
+                                    int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+                                    responseIndicator_1.setBackgroundColor(color);
                                     break;
                 }
             }
         });
     }
 
-    public void _call(String number){
-        Intent callIntent = new Intent(Intent.ACTION_CALL);
-        Toast.makeText(this, "INSIDE _CALL", Toast.LENGTH_SHORT).show();
-        callIntent.setData(Uri.parse("tel:" + number));
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED){
-            startActivity(callIntent);
-        }
-    }
+//    public void _randomizeColor(String number){
+//        Intent callIntent = new Intent(Intent.ACTION_CALL);
+//        Toast.makeText(this, "INSIDE _CALL", Toast.LENGTH_SHORT).show();
+//        callIntent.setData(Uri.parse("tel:" + number));
+//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED){
+//            startActivity(callIntent);
+//        }
+//    }
 
     public void _indicateTestTouch(){
         Toast.makeText(this, "TEST was tapped", Toast.LENGTH_SHORT).show();
     }
+
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+
+            if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE,
+                        BluetoothAdapter.ERROR);
+                switch (state) {
+                    case BluetoothAdapter.STATE_OFF:
+                        setDeviceStatus("Bluetooth disabled", false);
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_OFF:
+                        setDeviceStatus("Turning Bluetooth off...", false);
+                        break;
+                    case BluetoothAdapter.STATE_ON:
+                        setDeviceStatus("Device ready", true);
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_ON:
+                        setDeviceStatus("Turning Bluetooth on...", true);
+                        break;
+                }
+            }
+        }
+    };
+
+    public void setDeviceStatus(final String message, final boolean code) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+
+                if (code) {
+                    mDeviceStatus.setTextColor(Color.parseColor("#009d00"));
+                } else {
+                    mDeviceStatus.setTextColor(Color.parseColor("#ff9999"));
+                }
+                mDeviceStatus.setText(message);
+            }
+        });
+    }
+
+    public void setConnectionStatus(final String message, final boolean code) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                if (code) {
+                    mConnectionStatus.setTextColor(Color.parseColor("#009d00"));
+                } else {
+                    mConnectionStatus.setTextColor(Color.parseColor("#cccccc"));
+                }
+                mConnectionStatus.setText(message);
+            }
+        });
+    }
+
+    public void setMessageText(final String message) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                mMessageLog.setText(message);
+            }
+        });
+    }
 }
+
+

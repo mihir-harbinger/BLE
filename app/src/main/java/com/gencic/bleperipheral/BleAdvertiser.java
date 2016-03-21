@@ -54,11 +54,13 @@ public class BleAdvertiser {
                         super.onConnectionStateChange(device, status, newState);
                         if (newState == BluetoothProfile.STATE_CONNECTED) {
                             if (mLogger != null) {
+                                mActivity.setConnectionStatus("Connected", true);
                                 mLogger.log("Client connected: " + device.getAddress());
                             }
                             mConnectedDevice = device;
                         } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                             if (mLogger != null) {
+                                mActivity.setConnectionStatus("Disconnected", false);
                                 mLogger.log("Client disconnected: " + device.getAddress());
                             }
                             mConnectedDevice = null;
@@ -97,6 +99,7 @@ public class BleAdvertiser {
                                 mActivity.serveIncomingRequest(msg);
                             }
                             mLogger.log("onCharacteristicWriteRequest: " + msg);
+                            mActivity.setMessageText(msg);
                         }
                     }
                 });
@@ -105,6 +108,7 @@ public class BleAdvertiser {
                 mLogger.log("Central mode not supported by the device!");
             }
         } else {
+            mActivity.setConnectionStatus("Disconnected", false);
             mLogger.log("Bluetooth is disabled!");
         }
     }
@@ -152,6 +156,7 @@ public class BleAdvertiser {
         public void onStartSuccess(AdvertiseSettings settingsInEffect) {
             super.onStartSuccess(settingsInEffect);
             if (mLogger != null) {
+                mActivity.setDeviceStatus("Advertising", true);
                 mLogger.log("Advertising started successfully");
             }
         }
