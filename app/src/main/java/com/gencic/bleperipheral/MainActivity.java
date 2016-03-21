@@ -137,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener, 
                     } else if (mAdvertiser != null) {
                         mAdvertiser.sendMessage(mEditTextMsg.getText().toString());
                     }
+                    mEditTextMsg.setText("");
                 }
                 break;
             case R.id.responseIndicator_1:
