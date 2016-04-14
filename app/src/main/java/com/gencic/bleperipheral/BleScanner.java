@@ -1,9 +1,11 @@
 package com.gencic.bleperipheral;
 
+import android.annotation.TargetApi;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
@@ -13,9 +15,11 @@ import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.os.ParcelUuid;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +36,7 @@ public class BleScanner {
     private Context mContext;
     private BluetoothGatt mGatt;
     private BluetoothGattCharacteristic mCharacteristic;
+    private BluetoothGattDescriptor descriptor;
     private MainActivity mActivity;
 
     public BleScanner(Context context, BluetoothManager bluetoothManager) {
@@ -72,7 +77,9 @@ public class BleScanner {
         }
     }
 
+    @TargetApi(23)
     private void connectToGattServer(BluetoothDevice device){
+
         device.connectGatt(mContext, false, new BluetoothGattCallback() {
             @Override
             public void onServicesDiscovered(BluetoothGatt gatt, int status) {
@@ -91,6 +98,9 @@ public class BleScanner {
                                 mActivity.setConnectionStatus("Connected", true);
                             }
                             gatt.setCharacteristicNotification(mCharacteristic, true);
+                            descriptor = mCharacteristic.getDescriptor(UUID.fromString(Constants.CHAT_CHARACTERISTIC_UUID));
+                            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                            mGatt.writeDescriptor(descriptor);
                         }
                     }
                 }
@@ -122,7 +132,7 @@ public class BleScanner {
                     mActivity.serveIncomingRequest(characteristic.getStringValue(0));
                 }
             }
-        });
+        }, 2);
     }
 
     public void sendMessage(String msg) {
