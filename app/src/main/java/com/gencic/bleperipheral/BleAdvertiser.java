@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattServer;
 import android.bluetooth.BluetoothGattServerCallback;
 import android.bluetooth.BluetoothGattService;
@@ -32,6 +33,8 @@ public class BleAdvertiser {
     private ILogger mLogger;
     private Context mContext;
     private MainActivity mActivity;
+    private BluetoothGattDescriptor descriptor;
+    private BluetoothGattCharacteristic mCharacteristic;
 
 
     public BleAdvertiser(Context context, BluetoothManager bluetoothManager) {
@@ -53,6 +56,7 @@ public class BleAdvertiser {
                     public void onConnectionStateChange(BluetoothDevice device, int status, int newState) {
                         super.onConnectionStateChange(device, status, newState);
                         if (newState == BluetoothProfile.STATE_CONNECTED) {
+                            sendMessage("HELLO");
                             if (mLogger != null) {
                                 mActivity.setConnectionStatus("Connected", true);
                                 mLogger.log("Client connected: " + device.getAddress());

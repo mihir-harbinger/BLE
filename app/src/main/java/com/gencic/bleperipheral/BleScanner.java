@@ -18,8 +18,11 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.ParcelUuid;
+import android.util.Log;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -97,10 +100,15 @@ public class BleScanner {
                                 mLogger.log("Characteristic discovered: " + mCharacteristic.getUuid());
                                 mActivity.setConnectionStatus("Connected", true);
                             }
-                            gatt.setCharacteristicNotification(mCharacteristic, true);
-                            descriptor = mCharacteristic.getDescriptor(UUID.fromString(Constants.CHAT_CHARACTERISTIC_UUID));
+                            mGatt.setCharacteristicNotification(mCharacteristic, true);
+//                            for (BluetoothGattDescriptor descriptor:mCharacteristic.getDescriptors()){
+//                                Log.e("SCANNER DESC", "BluetoothGattDescriptor: "+descriptor.getUuid().toString());
+//                            }
+                            descriptor = mCharacteristic.getDescriptor(UUID.fromString("00002902-0000-1000-8000-00805f9b34fb"));
+                            //descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
                             descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                             mGatt.writeDescriptor(descriptor);
+                            sendMessage("hi there");
                         }
                     }
                 }
@@ -137,8 +145,16 @@ public class BleScanner {
 
     public void sendMessage(String msg) {
         if (mCharacteristic != null) {
-            mCharacteristic.setValue(msg);
-            mGatt.writeCharacteristic(mCharacteristic);
+            try{
+                mCharacteristic.setValue(URLEncoder.encode(msg, "utf-8"));
+                mGatt.writeCharacteristic(mCharacteristic);
+            }
+            catch(UnsupportedEncodingException ex){
+                ex.printStackTrace();
+            }
+        }
+        else{
+            Log.e("SCANNER", "NO CHARACTERISTIC FOUND");
         }
     }
 
